@@ -138,4 +138,4 @@ Contributions to Neon Snake are welcome! Feel free to report bugs, suggest featu
 License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-Enjoy playing Neon Snake!
+:D Enjoy playing Neon Snake!
