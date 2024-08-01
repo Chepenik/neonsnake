@@ -8,11 +8,12 @@ from pygame import gfxdraw
 pygame.init()
 
 # Set up the game window (square grid)
-GRID_SIZE = 24  # Size of each grid cell, you can adjust this to make the grid larger or smaller
-GRID_WIDTH, GRID_HEIGHT = 40, 40  # Number of cells in the grid, adjust to change game size
-WIDTH, HEIGHT = GRID_WIDTH * GRID_SIZE, GRID_HEIGHT * GRID_SIZE
+GRID_SIZE = 25  # Size of each grid cell, you can adjust this to make the grid larger or smaller
+GRID_WIDTH, GRID_HEIGHT = 36, 32  # Changed from 36, 36 to 36, 32
+BOTTOM_MARGIN = 100  # Changed from 50 to 100
+WIDTH = GRID_WIDTH * GRID_SIZE
+HEIGHT = (GRID_HEIGHT * GRID_SIZE) + BOTTOM_MARGIN
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Neon Snake")
 
 # Colors
 BLACK = (0, 0, 0)
@@ -76,8 +77,8 @@ def update_high_scores(name, score):
 def draw_grid():
     """Draw the game grid"""
     for x in range(0, WIDTH, GRID_SIZE):
-        pygame.draw.line(SCREEN, (30, 30, 30), (x, 0), (x, HEIGHT))
-    for y in range(0, HEIGHT, GRID_SIZE):
+        pygame.draw.line(SCREEN, (30, 30, 30), (x, 0), (x, HEIGHT - BOTTOM_MARGIN))
+    for y in range(0, HEIGHT - BOTTOM_MARGIN, GRID_SIZE):
         pygame.draw.line(SCREEN, (30, 30, 30), (0, y), (WIDTH, y))
 
 def draw_snake():
@@ -164,7 +165,7 @@ def game_over():
     game_over_sound.play()
     font = pygame.font.Font(None, 72)
     text = font.render("Game Over", True, WHITE)
-    text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+    text_rect = text.get_rect(center=(WIDTH // 2, (HEIGHT - BOTTOM_MARGIN) // 2))
     SCREEN.blit(text, text_rect)
     pygame.display.flip()
     pygame.time.wait(1000)
@@ -188,7 +189,7 @@ def game_over():
         SCREEN.fill(BLACK)
         SCREEN.blit(text, text_rect)
         initials_text = font.render(f"Enter Initials: {initials}", True, WHITE)
-        initials_rect = initials_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 50))
+        initials_rect = initials_text.get_rect(center=(WIDTH // 2, (HEIGHT - BOTTOM_MARGIN) // 2 + 50))
         SCREEN.blit(initials_text, initials_rect)
         pygame.display.flip()
         clock.tick(10)
@@ -203,13 +204,13 @@ def display_high_scores():
     SCREEN.fill(BLACK)
     font = pygame.font.Font(None, 48)
     title = font.render("High Scores", True, WHITE)
-    title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 150))
+    title_rect = title.get_rect(center=(WIDTH // 2, (HEIGHT - BOTTOM_MARGIN) // 2 - 150))
     SCREEN.blit(title, title_rect)
 
     font = pygame.font.Font(None, 36)
     for i, (name, score) in enumerate(high_scores):
         score_text = font.render(f"{name}: {score}", True, WHITE)
-        score_rect = score_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 100 + i * 40))
+        score_rect = score_text.get_rect(center=(WIDTH // 2, (HEIGHT - BOTTOM_MARGIN) // 2 - 100 + i * 40))
         SCREEN.blit(score_text, score_rect)
 
     pygame.display.flip()
@@ -219,7 +220,7 @@ def end_screen():
     """Display options to restart or quit after entering initials"""
     font = pygame.font.Font(None, 36)
     text = font.render("Press R to Restart or Q to Quit", True, WHITE)
-    text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 100))
+    text_rect = text.get_rect(center=(WIDTH // 2, (HEIGHT - BOTTOM_MARGIN) // 2 + 100))
     SCREEN.blit(text, text_rect)
     pygame.display.flip()
 
@@ -281,7 +282,7 @@ def main():
 
         # Display score
         score_text = font.render(f"Score: {score}", True, WHITE)
-        SCREEN.blit(score_text, (10, 10))
+        SCREEN.blit(score_text, (10, HEIGHT - BOTTOM_MARGIN + 10))
 
         pygame.display.flip()
         clock.tick(10)  # Control game speed
