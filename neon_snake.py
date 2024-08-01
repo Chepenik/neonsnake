@@ -9,11 +9,13 @@ pygame.init()
 
 # Set up the game window (square grid)
 GRID_SIZE = 25  # Size of each grid cell, you can adjust this to make the grid larger or smaller
-GRID_WIDTH, GRID_HEIGHT = 36, 32  # Changed from 36, 36 to 36, 32
-BOTTOM_MARGIN = 100  # Changed from 50 to 100
-WIDTH = GRID_WIDTH * GRID_SIZE
+GRID_WIDTH, GRID_HEIGHT = 36, 32
+BOTTOM_MARGIN = 100
+SCORE_AREA_WIDTH = 150  # Width of the area for displaying score
+WIDTH = (GRID_WIDTH * GRID_SIZE) + SCORE_AREA_WIDTH
 HEIGHT = (GRID_HEIGHT * GRID_SIZE) + BOTTOM_MARGIN
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Neon Snake")
 
 # Colors
 BLACK = (0, 0, 0)
@@ -76,10 +78,10 @@ def update_high_scores(name, score):
 
 def draw_grid():
     """Draw the game grid"""
-    for x in range(0, WIDTH, GRID_SIZE):
+    for x in range(0, GRID_WIDTH * GRID_SIZE, GRID_SIZE):
         pygame.draw.line(SCREEN, (30, 30, 30), (x, 0), (x, HEIGHT - BOTTOM_MARGIN))
     for y in range(0, HEIGHT - BOTTOM_MARGIN, GRID_SIZE):
-        pygame.draw.line(SCREEN, (30, 30, 30), (0, y), (WIDTH, y))
+        pygame.draw.line(SCREEN, (30, 30, 30), (0, y), (GRID_WIDTH * GRID_SIZE, y))
 
 def draw_snake():
     """Draw the snake with a glowing effect"""
@@ -113,6 +115,10 @@ def draw_power_up():
             for i in range(5)
         ]
         pygame.draw.polygon(SCREEN, NEON_YELLOW, points)
+
+def draw_score_area():
+    """Draw a separator between game area and score area"""
+    pygame.draw.line(SCREEN, WHITE, (GRID_WIDTH * GRID_SIZE, 0), (GRID_WIDTH * GRID_SIZE, HEIGHT - BOTTOM_MARGIN), 2)
 
 def move_snake():
     """Move the snake and handle collisions"""
@@ -279,10 +285,13 @@ def main():
         draw_snake()
         draw_food()
         draw_power_up()
+        draw_score_area()
 
-        # Display score
+        # Display score in the right side area
         score_text = font.render(f"Score: {score}", True, WHITE)
-        SCREEN.blit(score_text, (10, HEIGHT - BOTTOM_MARGIN + 10))
+        score_rect = score_text.get_rect()
+        score_rect.topleft = (GRID_WIDTH * GRID_SIZE + 10, 10)  # 10 pixels padding from top and left of score area
+        SCREEN.blit(score_text, score_rect)
 
         pygame.display.flip()
         clock.tick(10)  # Control game speed
