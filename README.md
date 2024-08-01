@@ -58,7 +58,7 @@ Make sure you're in the correct directory when running the game.
 
 If you're still having problems, please open an issue in this repository with details about the error you're experiencing.
 
-It is also worth making a .env file and adding this
+It is also worth making a .gitignore file and adding this
 
 ```
 # Virtual environment
